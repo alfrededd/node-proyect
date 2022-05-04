@@ -2,7 +2,7 @@
   "name": "fundamentos",
   "version": "1.0.0",
   "description": "",
-  "main": "app2.js",
+  "main": "App.js",
   "scripts": {
     "start": "node app"
   },
