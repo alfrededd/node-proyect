@@ -1,7 +1,22 @@
 const express = require('express');
 const app = express();
+
+require('dotenv').config();
+
 //configuracion de puerto
 const port =process.env.PORT || 3000; 
+
+//Conexion a base de datos
+const mongoose = require('mongoose');
+
+
+const url = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.w3cru.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
+
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(()=> console.log('Base de datos conectada')) 
+  .catch(e => console.log('error de conexión', e))
+;
+
 
 // Motor de plantilla ejs en la carpeta views
 app.set("view engine", "ejs");
@@ -9,13 +24,8 @@ app.set("views", __dirname + "/views");
 
 app.use(express.static(__dirname + "/public"));
 
-app.get('/',(req,res)=>{
-    res.render("index",{titulo: "mi titulo dinamico"})
-})
-
-app.get('/servicios',(req, res)=>{
-    res.render("servicios",{tituloServicios:"este es un mensaje dinamico de servicios"});
-})
+app.use('/',require('./router/RutasWeb'));
+app.use('/mascotas',require('./router/Mascotas'));
 
 app.use((req,res,next)=>{
     res.status(404).render("404",{
